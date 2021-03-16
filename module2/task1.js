@@ -1,10 +1,11 @@
-const str = '12345 678'
-const str1 = 'test data'
+process.stdin.setEncoding('utf8')
 
-function strReverse(str) {
-  return str.split('').reverse().join('')
-}
+process.stdin.on('readable', () => {
+  let str 
 
-console.log(strReverse(str));
-console.log(strReverse(str1));
-
+  while ((str = process.stdin.read()) !== null) {
+    const pureStr = str.slice()
+    const reverseStr = pureStr.split('').reverse().join('')
+    process.stdout.write(reverseStr)
+  }
+})
