@@ -2,4 +2,4 @@ require("@babel/register")({
   presets: ["@babel/preset-env"]
 });
 
-module.exports = require('./module2/task3')
+module.exports = require('./module3/app')
