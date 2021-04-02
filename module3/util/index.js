@@ -1,4 +1,4 @@
-import HttpException from "../expection"
+import HttpException from "../exception"
 
 export const checkParams = (result) => {
   if (result.error) {

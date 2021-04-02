@@ -3,15 +3,42 @@ import Joi from '@hapi/joi'
 
 import { users } from './mock'
 import { checkParams } from '../util'
-import HttpException from '../expection';
+import HttpException from '../exception';
 
 const router = express.Router();
 
 router.get('/user/:id', (req, res) => {
-  let user = {}
   const u = users.filter((item) => item.id === req.params.id)
-  if(u.length) { [user] = u }
+
+  if (!u.length) {
+    throw new HttpException({ code: 10010, message: 'No matching user data' })
+  }
+
+  const [user] = u
+
   res.send(user)
+})
+
+/**
+ * http://localhost:3000/user?subString=a&limit=2
+ */
+router.get('/user', (req, res) => {
+  const { subString, limit } = req.query
+  const suggestUsers = users.filter((item) => item.login.includes(subString))
+  suggestUsers.sort((a, b) => {
+    const loginA = a.login.toUpperCase()
+    const loginB = b.login.toUpperCase()
+
+    if (loginA < loginB) {
+      return -1
+    }
+    if (loginA > loginB) {
+      return 1
+    }
+    return 0
+  })
+  suggestUsers.length = limit
+  res.send(suggestUsers)
 })
 
 /**
@@ -88,11 +115,14 @@ router.put('/user', (req, res, next) => {
   res.send({ code: 1, message: 'Update user password successfully!'})
 })
 
+/**
+ * {"id": "0e6bd69a"}
+ */
 router.delete('/user', (req, res) => {
   const user = req.body
   const t = users.filter((item) => item.id === user.id)
 
-  if (!t.length) {
+  if (!t.length || t[0].isDeleted === true) {
     throw new HttpException({ code: 10010, message: 'No matching user data' })
   }
 
