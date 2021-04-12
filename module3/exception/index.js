@@ -7,13 +7,13 @@ export default class HttpException extends Error {
    * 构造函数
    * @param ex 可选参数，通过{}的形式传入
    */
-  constructor (ex) {
-    super()
+  constructor(ex) {
+    super();
     if (ex && ex.code) {
-      this.code = ex.code
+      this.code = ex.code;
     }
     if (ex && ex.message) {
-      this.message = ex.message
+      this.message = ex.message;
     }
   }
 }

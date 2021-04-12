@@ -1,8 +1,7 @@
 import express from 'express';
-import Joi from '@hapi/joi'
 
 import { users } from './mock'
-import { checkParams } from '../util'
+import { userValidation } from '../validation/user'
 import HttpException from '../exception';
 
 const router = express.Router();
@@ -15,7 +14,6 @@ router.get('/user/:id', (req, res) => {
   }
 
   const [user] = u
-
   res.send(user)
 })
 
@@ -42,7 +40,7 @@ router.get('/user', (req, res) => {
 })
 
 /**
- * postman data: 
+ * postman data:
  * {
     "id": "f3db31b8",
     "login": "fin",
@@ -51,19 +49,7 @@ router.get('/user', (req, res) => {
     "isDeleted": false
   }
  */
-router.post('/user', (req, res) => {
-  const schema = Joi.object().keys(
-    {
-      id: Joi.string().required(),
-      login: Joi.string().required(),
-      password: Joi.string().regex(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/),
-      age: Joi.number().integer().min(4).max(130).required(),
-      isDeleted: Joi.boolean().required(),
-    }
-  )
-  const result = schema.validate(req.body)
-  checkParams(result)
-
+router.post('/user', userValidation, (req, res) => {
   const user = req.body
   users.push(user)
 
@@ -85,26 +71,14 @@ router.post('/user', (req, res) => {
     "isDeleted": false
   }
  */
-router.put('/user', (req, res, next) => {
-  const schema = Joi.object().keys(
-    {
-      id: Joi.string().required(),
-      login: Joi.string().required(),
-      password: Joi.string().regex(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/),
-      age: Joi.number().integer().min(4).max(130).required(),
-      isDeleted: Joi.boolean().required(),
-    }
-  )
-  const result = schema.validate(req.body)
-  checkParams(result)
-
+router.put('/user', userValidation, (req, res) => {
   const user = req.body
   const t = users.filter((item) => item.id === user.id)
 
   if (!t.length) {
     throw new HttpException({ code: 10010, message: 'No matching user data' })
   }
-  
+
   users.map((item) => {
     if (item.id === user.id) {
       item.password = user.password
@@ -112,7 +86,7 @@ router.put('/user', (req, res, next) => {
   })
 
   res.status(201)
-  res.send({ code: 1, message: 'Update user password successfully!'})
+  res.send({ code: 1, message: 'Update user password successfully!' })
 })
 
 /**
@@ -128,12 +102,11 @@ router.delete('/user', (req, res) => {
 
   users.map(item => {
     if (item.id === user.id) {
-      item.isDeleted = true      
+      item.isDeleted = true
     }
   })
 
-  res.status(201)
-  res.send({ code: 2, message: 'The current use has been deleted!'})
+  res.status(204).json({ code: 2, message: 'The current use has been deleted!' })
 })
 
 export default router;

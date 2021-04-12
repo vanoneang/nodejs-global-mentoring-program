@@ -26,7 +26,7 @@
             "restParams": true,
             "spread": true,
             "superInFunctions": true,
-            "templateStrings": true,
+            "templateStrings": true
         }
     },
     "rules": {
@@ -212,22 +212,13 @@
         ],
         "indent": [
             2,
-            4,
+            2,
             {
                 "SwitchCase": 1
             }
         ],
         "linebreak-style": 0,
-        "max-len": [
-            2,
-            200,
-            4,
-            {
-                "ignoreUrls": true,
-                "ignoreComments": false,
-                "ignorePattern": "^\\s*(const|let|var)\\s+\\w+\\s+\\=\\s+\\/.*\\/(|i|g|m|ig|im|gm|igm);?$"
-            }
-        ],
+        "max-len": "off",
         "max-nested-callbacks": [
             2,
             4
@@ -272,10 +263,7 @@
                 "after": true
             }
         ],
-        "semi": [
-            2,
-            "always"
-        ],
+        "semi": "off",
         "keyword-spacing": 2,
         "space-before-blocks": 2,
         "space-before-function-paren": [
