@@ -85,7 +85,6 @@ router.put('/user', userValidation, (req, res) => {
     }
   })
 
-  res.status(201)
   res.send({ code: 1, message: 'Update user password successfully!' })
 })
 
@@ -106,7 +105,7 @@ router.delete('/user', (req, res) => {
     }
   })
 
-  res.status(204).json({ code: 2, message: 'The current use has been deleted!' })
+  res.status(204).json()
 })
 
 export default router;
