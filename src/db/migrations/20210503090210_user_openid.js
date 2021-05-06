@@ -1,15 +1,15 @@
 
-exports.up = function(knex) {
+exports.up = (knex) => {
   return knex.schema
-    .table('users', function (table) {
+    .table('users', (table) => {
       table.string('openid');
       table.unique('openid');
     })
 };
 
-exports.down = function(knex) {
+exports.down = (knex) => {
   return knex.schema
-    .table('users', function (table) {
+    .table('users', (table) => {
       table.dropColumn('openid');
       table.dropUnique('openid');
     })

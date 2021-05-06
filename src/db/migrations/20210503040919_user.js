@@ -1,16 +1,16 @@
 
-exports.up = function(knex) {
+exports.up = (knex) => {
   return knex.schema
-    .createTable('users', function (table) {
-       table.increments('id');
-       table.string('login', 20).notNullable();
-       table.string('password', 255).notNullable();
-       table.integer('age', 3).notNullable();
-       table.boolean('is_deleted').defaultTo(false)
+    .createTable('users', (table) => {
+      table.increments('id');
+      table.string('login', 20).notNullable();
+      table.string('password', 255).notNullable();
+      table.integer('age', 3).notNullable();
+      table.boolean('is_deleted').defaultTo(false)
     })
 };
 
-exports.down = function(knex) {
+exports.down = (knex) => {
   return knex.schema
-    .dropTable("users")
+    .dropTable('users')
 };

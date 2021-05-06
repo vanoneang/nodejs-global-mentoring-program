@@ -19,6 +19,12 @@ execute migration file
 knex migrate:latest
 ```
 
+execute single migration file
+
+```
+knex migrate:up 20210503040919_user.js
+```
+
 rollback
 ```
 knex migrate:rollback

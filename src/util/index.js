@@ -1,4 +1,4 @@
-import HttpException from '../exception'
+import { HttpException } from '../exception'
 
 export const checkParams = (result) => {
   if (result.error) {
@@ -8,3 +8,5 @@ export const checkParams = (result) => {
     })
   }
 }
+
+export const wrap = fn => (...args) => fn(...args).catch(args[2])

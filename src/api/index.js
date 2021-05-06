@@ -1,111 +1,76 @@
 import express from 'express';
 
-import { users } from './mock'
 import { userValidation } from '../validation/user'
-import HttpException from '../exception';
+import { NotFound } from '../exception';
+import Users from '../model/users';
+import { wrap } from '../util'
 
 const router = express.Router();
 
-router.get('/user/:id', (req, res) => {
-  const u = users.filter((item) => item.id === req.params.id)
+router.get('/user/:openid', wrap(async (req, res) => {
+  const { openid } = req.params
+  const u = await Users.query({ openid })
 
   if (!u.length) {
-    throw new HttpException({ code: 10010, message: 'No matching user data' })
+    throw new NotFound({ code: 10010, message: 'No matching user data' })
   }
 
   const [user] = u
   res.send(user)
-})
+}))
 
 /**
  * http://localhost:3000/user?subString=a&limit=2
  */
-router.get('/user', (req, res) => {
+router.get('/user', wrap(async (req, res) => {
   const { subString, limit } = req.query
-  const suggestUsers = users.filter((item) => item.login.includes(subString))
-  suggestUsers.sort((a, b) => {
-    const loginA = a.login.toUpperCase()
-    const loginB = b.login.toUpperCase()
-
-    if (loginA < loginB) {
-      return -1
-    }
-    if (loginA > loginB) {
-      return 1
-    }
-    return 0
-  })
-  suggestUsers.length = limit
+  const suggestUsers = await Users.queryByLogin(subString, limit)
   res.send(suggestUsers)
-})
+}))
 
 /**
  * postman data:
  * {
-    "id": "f3db31b8",
+    "openid": "f3db31b8",
     "login": "fin",
     "password": "123456",
     "age": 27,
-    "isDeleted": false
+    "is_deleted": false
   }
  */
-router.post('/user', userValidation, (req, res) => {
-  const user = req.body
-  users.push(user)
+router.post('/user', userValidation, wrap(async (req, res) => {
+  await Users.insert(req.body)
 
   res
     .status(201)
     .send({
       code: 0,
-      message: 'User added successfully!',
-      users
+      message: 'User added successfully!'
     })
-})
+}))
 
 /**
  * {
-    "id": "0e6bd69a",
+    "openid": "0e6bd69a",
     "login": "van",
     "password": "n123456",
     "age": 21,
-    "isDeleted": false
+    "is_deleted": false
   }
  */
-router.put('/user', userValidation, (req, res) => {
+router.put('/user', userValidation, wrap(async (req, res) => {
   const user = req.body
-  const t = users.filter((item) => item.id === user.id)
-
-  if (!t.length) {
-    throw new HttpException({ code: 10010, message: 'No matching user data' })
-  }
-
-  users.map((item) => {
-    if (item.id === user.id) {
-      item.password = user.password
-    }
-  })
-
+  await Users.update({ openid: user.openid }, user)
   res.send({ code: 1, message: 'Update user password successfully!' })
-})
+}))
 
 /**
- * {"id": "0e6bd69a"}
+ * {"openid": "0e6bd69a"}
  */
-router.delete('/user', (req, res) => {
+router.delete('/user', wrap(async (req, res) => {
   const user = req.body
-  const t = users.filter((item) => item.id === user.id)
-
-  if (!t.length || t[0].isDeleted === true) {
-    throw new HttpException({ code: 10010, message: 'No matching user data' })
-  }
-
-  users.map(item => {
-    if (item.id === user.id) {
-      item.isDeleted = true
-    }
-  })
-
+  await Users.drop({ openid: user.openid })
   res.status(204).json()
-})
+}))
 
 export default router;

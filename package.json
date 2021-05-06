@@ -8,7 +8,7 @@
     "task1": "nodemon module2/task1.js",
     "task1.2": "nodemon module2/task2.js",
     "task1.3": "nodemon index.js",
-    "task2": "nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,11 @@
   "homepage": "https://github.com/vanoneang/nodejs-global-mentoring-program#readme",
   "devDependencies": {
     "@babel/core": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
+    "@babel/plugin-transform-regenerator": "^7.13.15",
+    "@babel/preset-env": "^7.14.1",
     "@babel/register": "^7.13.8",
     "babel-eslint": "^10.1.0",
+    "babel-preset-env": "^1.7.0",
     "nodemon": "^2.0.7"
   },
   "dependencies": {
@@ -35,6 +37,7 @@
     "eslint": "^7.23.0",
     "express": "^4.17.1",
     "knex": "^0.95.4",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "regenerator-runtime": "^0.13.7"
   }
 }

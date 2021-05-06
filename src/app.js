@@ -14,7 +14,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(apis)
 
-app.use(errorHandler())
+app.use(errorHandler)
 
 
 app.listen(port, err => {
