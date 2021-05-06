@@ -1,9 +1,11 @@
 import express from 'express';
 
 import { userValidation } from '../validation/user'
+import { groupValidation, groupIdValidation, updateGroupValidation } from '../validation/group'
 import { NotFound } from '../exception';
 import Users from '../model/users';
 import { wrap } from '../util'
+import Groups from '../model/groups';
 
 const router = express.Router();
 
@@ -72,5 +74,66 @@ router.delete('/user', wrap(async (req, res) => {
   await Users.drop({ openid: user.openid })
   res.status(204).json()
 }))
+
+/**
+ * {
+    "id": "4d1c7ce9-ac82-4347-90d6-8f3f84d3d17d",
+    "name": "develop",
+    "permissions": "READ,WRITE"
+  }
+ */
+router.post('/group', groupValidation, wrap(async (req, res) => {
+  await Groups.insert(req.body)
+  res
+    .status(201)
+    .send({
+      code: 0,
+      message: 'Group added successfully!'
+    })
+}))
+
+router.get('/group/all', wrap(async (req, res) => {
+  const groups = await Groups.queryAll()
+  res.send(groups)
+}))
+
+/**
+ * 4d1c7ce9-ac82-4347-90d6-8f3f84d3d17d
+ */
+router.get('/group/:id', groupIdValidation, wrap(async (req, res) => {
+  const { id } = req.params
+  const u = await Groups.query({ id })
+
+  if (!u.length) {
+    throw new NotFound({ code: 10010, message: 'No matching user data' })
+  }
+
+  const [group] = u
+  res.send(group)
+}))
+
+/**
+ * {
+    "id": "4d1c7ce9-ac82-4347-90d6-8f3f84d3d17d",
+    "name": "develop",
+    "permissions": "READ,WRITE"
+  }
+ */
+router.put('/group', updateGroupValidation, wrap(async (req, res) => {
+  await Groups.update(req.body)
+  res.send({
+    code: 5,
+    message: 'Update group info successfully!'
+  })
+}))
+
+/**
+ * 4d1c7ce9-ac82-4347-90d6-8f3f84d3d17d
+ */
+router.delete('/group/:id', groupIdValidation, wrap(async (req, res) => {
+  await Groups.drop(req.params.id)
+  res.status(204).json()
+}))
+
 
 export default router;

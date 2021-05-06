@@ -4,15 +4,9 @@ import { HttpException } from '../exception'
 const TABLE_NAME = 'users'
 
 class Users {
-  static query(params) {
-    return new Promise(resolve => {
-      knex(TABLE_NAME)
-        .select()
-        .where(params)
-        .then(res => {
-          resolve(res)
-        })
-    })
+  static async query(params) {
+    const res = await knex(TABLE_NAME).select().where(params)
+    return res
   }
 
   static async queryByLogin(str, limit) {
