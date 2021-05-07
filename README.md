@@ -5,6 +5,7 @@
 - Module2: Basics. Node.js fundamental theory
 - Module3: In-memory CRUD REST service with validation
 - Module4: PostgreSQL and layered architecture
+- Module5: Second entity and many-to-many relationships
 
 ## db
 create migration file
