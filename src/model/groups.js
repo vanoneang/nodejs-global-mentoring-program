@@ -22,8 +22,6 @@ class Groups {
     }
     const currentPermissions = Groups.checkPermissions(params.permissions)
     try {
-      console.log('JSON.stringify(currentPermissions)', JSON.stringify(currentPermissions));
-
       await knex(TABLE_NAME).insert({
         id: params.id,
         name: params.name,
@@ -36,10 +34,8 @@ class Groups {
 
   static async update(params) {
     const group = await Groups.query({ id: params.id })
-    console.log('group', params);
-
     if (!group.length) {
-      throw new HttpException({ code: 10010, message: 'No matching user data' })
+      throw new HttpException({ code: 10010, message: 'No matching group data' })
     }
     const updateValues = {}
     if (params.permissions) {
@@ -56,7 +52,10 @@ class Groups {
 
   static async drop(id) {
     try {
-      await knex(TABLE_NAME).where({ id }).del()
+      await knex.transaction(async trx => {
+        await trx(TABLE_NAME).where({ id }).del()
+        await trx('user_group').where({ group_id: id }).del()
+      })
     } catch (error) {
       console.log(error);
     }

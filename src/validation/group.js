@@ -52,3 +52,20 @@ export const updateGroupValidation = (req, res, next) => {
   checkParams(result)
   next()
 }
+
+export const groupUsersValidation = (req, res, next) => {
+  const schema = Joi.object().keys(
+    {
+      groupId: Joi.string().required().guid({
+        version: [
+          'uuidv4',
+          'uuidv5'
+        ]
+      }),
+      users: Joi.array().items(Joi.string())
+    }
+  )
+  const result = schema.validate(req.body)
+  checkParams(result)
+  next()
+}

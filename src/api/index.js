@@ -1,11 +1,12 @@
 import express from 'express';
 
 import { userValidation } from '../validation/user'
-import { groupValidation, groupIdValidation, updateGroupValidation } from '../validation/group'
+import { groupValidation, groupIdValidation, updateGroupValidation, groupUsersValidation } from '../validation/group'
 import { NotFound } from '../exception';
 import Users from '../model/users';
 import { wrap } from '../util'
 import Groups from '../model/groups';
+import UserGroup from '../model/user-group';
 
 const router = express.Router();
 
@@ -135,5 +136,21 @@ router.delete('/group/:id', groupIdValidation, wrap(async (req, res) => {
   res.status(204).json()
 }))
 
+/**
+ * {
+    "groupId": "4d1c7ce9-ac82-4347-90d6-8f3f84d3d17d",
+    "users": ["0e6bd69a", "50ed476d"]
+    }
+ */
+router.post('/group/users', groupUsersValidation, wrap(async (req, res) => {
+  const { groupId, users } = req.body
+  await UserGroup.addUsersToGroup(groupId, users)
+  res
+    .status(201)
+    .send({
+      code: 7,
+      message: 'Users added group successfully!'
+    })
+}))
 
 export default router;
