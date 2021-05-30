@@ -6,6 +6,7 @@
 - Module3: In-memory CRUD REST service with validation
 - Module4: PostgreSQL and layered architecture
 - Module5: Second entity and many-to-many relationships
+- Module6: LOGGING & ERROR HANDLING
 
 ## db
 create migration file
