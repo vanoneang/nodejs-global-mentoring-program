@@ -24,6 +24,7 @@ router.post('/login', wrap(async (req, res) => {
 
 router.get('/user/:openid', wrap(async (req, res) => {
   const { openid } = req.params
+  a();
   const u = await Users.query({ openid })
 
   if (!u.length) {

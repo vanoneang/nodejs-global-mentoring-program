@@ -8,5 +8,11 @@ export default (err, req, res, next) => {
       code: err.code,
       message: err.message
     });
+  } else {
+    res.status(500)
+    res.send({
+      code: 9999,
+      message: 'Server exception'
+    })
   }
 }

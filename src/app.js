@@ -1,5 +1,7 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
+import winston from 'winston'
+import expressWinston from 'express-winston';
 
 import apis from './api'
 import errorHandler from './middleware/exception'
@@ -12,7 +14,32 @@ app.set('case sensitive routing', true)
 
 app.use(express.json())
 app.use(cookieParser())
+
+app.use(expressWinston.logger({
+  transports: [
+    new (winston.transports.Console)({
+      json: true,
+      colorize: true
+    }),
+    new winston.transports.File({
+      filename: 'logs/success.log'
+    })
+  ]
+}));
+
 app.use(apis)
+
+app.use(expressWinston.errorLogger({
+  transports: [
+    new winston.transports.Console({
+      json: true,
+      colorize: true
+    }),
+    new winston.transports.File({
+      filename: 'logs/error.log'
+    })
+  ]
+}));
 
 app.use(errorHandler)
 
