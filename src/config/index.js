@@ -6,5 +6,11 @@ export default {
     user: 'postgres',
     password: '',
     database: 'nodejs-mentoring'
+  },
+  jwt: {
+    secret: 'oTQROr2rzjXiV5hT',
+    unless: [
+      '/login'
+    ]
   }
 }

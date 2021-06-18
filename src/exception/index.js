@@ -30,3 +30,19 @@ export class NotFound extends HttpException {
     this.exceptionHandler(ex);
   }
 }
+
+export class Unauthorized extends HttpException {
+  constructor(ex) {
+    super();
+    this.status = 401
+    this.exceptionHandler(ex);
+  }
+}
+
+export class Forbidden extends HttpException {
+  constructor(ex) {
+    super();
+    this.status = 403
+    this.exceptionHandler(ex);
+  }
+}

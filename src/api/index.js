@@ -1,10 +1,12 @@
 import express from 'express';
+import jwt from 'jsonwebtoken'
 
 import { userValidation } from '../validation/user'
 import { groupValidation, groupIdValidation, updateGroupValidation, groupUsersValidation } from '../validation/group'
 import { NotFound } from '../exception';
 import Users from '../model/users';
-import { wrap } from '../util'
+import { wrap } from '../util';
+import config from '../config';
 import Groups from '../model/groups';
 import UserGroup from '../model/user-group';
 
@@ -18,13 +20,13 @@ router.post('/login', wrap(async (req, res) => {
     throw new NotFound({ code: 10010, message: 'No matching user data' })
   }
 
+  const token = jwt.sign({ openid: user.openid }, config.jwt.secret, { expiresIn: '1h' })
 
-  res.send('Success')
+  res.send({ token })
 }))
 
 router.get('/user/:openid', wrap(async (req, res) => {
-  const { openid } = req.params
-  a();
+  const { openid } = req.params;
   const u = await Users.query({ openid })
 
   if (!u.length) {
