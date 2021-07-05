@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post('/login', wrap(async (req, res) => {
   const { username, password } = req.body
-
+  
   const user = await Users.query({ login: username, password })
   if (!user.length) {
     throw new NotFound({ code: 10010, message: 'No matching user data' })

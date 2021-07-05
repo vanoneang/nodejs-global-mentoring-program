@@ -5,7 +5,6 @@ import { Forbidden, Unauthorized } from '../exception'
 
 
 export default () => (req, res, next) => {
-  console.log(req.url, 'erq');
 
   if (config.jwt.unless.includes(req.url)) {
     return next()

@@ -9,7 +9,7 @@ import jwt from './middleware/jwt'
 import errorHandler from './middleware/exception'
 
 const app = express()
-const port = process.env.PORT || 3000
+
 
 app.set('x-powered-by', false)
 app.set('case sensitive routing', true)
@@ -49,9 +49,4 @@ app.use(expressWinston.errorLogger({
 app.use(errorHandler)
 
 
-app.listen(port, err => {
-  if (err) {
-    throw err
-  }
-  console.log(`App listening at http://localhost:${port}`)
-})
+module.exports = app
