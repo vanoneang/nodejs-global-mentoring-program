@@ -1,6 +1,7 @@
 {
     "parser": "babel-eslint",
     "plugins": [
+        "jest"
     ],
     "env": {
         "browser": true,
